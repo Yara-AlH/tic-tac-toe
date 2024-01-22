@@ -1,0 +1,6 @@
+.game-over{
+    font-size: 30px;
+    border: blueviolet 6px;
+    border-style: dotted ;
+    padding: 7px;
+}

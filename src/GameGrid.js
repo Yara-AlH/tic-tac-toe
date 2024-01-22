@@ -1,7 +1,8 @@
 import Cells from "./Cells";
 import "./GameGrid.css";
+import Strike from "./Strike";
 
-function GameGrid({ cells, onCellClick }) {
+function GameGrid({ cells, onCellClick, strikeClass }) {
   return (
     <div className="gameGrid">
       <Cells
@@ -45,6 +46,7 @@ function GameGrid({ cells, onCellClick }) {
         className="right"
       />
       <Cells onClick={() => onCellClick(8)} value={cells[8]} />
+      <Strike strikeClass={strikeClass} />
     </div>
   );
 }
