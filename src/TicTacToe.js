@@ -4,11 +4,13 @@ import ResetBtn from "./ResetBtn.js";
 import GameOver from "./GameOver.js";
 import "./TicTacToe.css";
 import ConfettiExplosion from "react-confetti-explosion";
-
-const PLAYER_X = "X";
-const PLAYER_O = "O";
+import click from "./sounds/click.mp3";
+import winner from "./sounds/winner.mp3";
 
 function TicTacToe() {
+  const PLAYER_X = "X";
+  const PLAYER_O = "O";
+
   const [cells, setCells] = useState(Array(9).fill(null));
   const [playerTurn, setPlayerTurn] = useState(PLAYER_X);
   const [strikeClass, setStrikeClass] = useState();
@@ -42,6 +44,8 @@ function TicTacToe() {
         setWinnerMessage(`Player ${cellValue1} wins!`);
         setGameOver(true);
         setIsExploding(true);
+
+        new Audio(winner).play();
       }
     }
 
@@ -69,6 +73,8 @@ function TicTacToe() {
     } else {
       setPlayerTurn(PLAYER_X);
     }
+
+    new Audio(click).play();
   }
 
   function handleResetClick() {
