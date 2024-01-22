@@ -1,0 +1,8 @@
+.gameGrid {
+  display: grid;
+  grid-template-columns: 130px 130px 130px;
+  grid-template-rows: 130px 130px 130px;
+  cursor: pointer;
+  position: relative;
+
+} 

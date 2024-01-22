@@ -1,0 +1,14 @@
+.cell {
+    font-size: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right {
+    border-right: 3px solid;
+}
+
+.bottom {
+    border-bottom: 3px solid;
+}
