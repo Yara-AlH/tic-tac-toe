@@ -3,6 +3,7 @@ import GameGrid from "./GameGrid.js";
 import ResetBtn from "./ResetBtn.js";
 import GameOver from "./GameOver.js";
 import "./TicTacToe.css";
+import ConfettiExplosion from "react-confetti-explosion";
 
 const PLAYER_X = "X";
 const PLAYER_O = "O";
@@ -13,6 +14,7 @@ function TicTacToe() {
   const [strikeClass, setStrikeClass] = useState();
   const [winnerMessage, setWinnerMessage] = useState("");
   const [gameOver, setGameOver] = useState(false);
+  const [isExploding, setIsExploding] = useState(false);
 
   const winningCombos = [
     { combo: [0, 1, 2], strikeClass: "strike-row-1" },
@@ -39,6 +41,7 @@ function TicTacToe() {
         setStrikeClass(strikeClass);
         setWinnerMessage(`Player ${cellValue1} wins!`);
         setGameOver(true);
+        setIsExploding(true);
       }
     }
 
@@ -74,6 +77,7 @@ function TicTacToe() {
     setStrikeClass(null);
     setWinnerMessage("");
     setGameOver(false);
+    setIsExploding(false);
   }
 
   useEffect(() => {
@@ -83,11 +87,13 @@ function TicTacToe() {
   return (
     <div className="ticTacToe">
       <h1>Tic Tac Toe </h1>
+      {isExploding && <ConfettiExplosion />}
       <GameGrid
         cells={cells}
         onCellClick={handleCellClick}
         strikeClass={strikeClass}
       />
+
       <GameOver gameover={gameOver} displayMessage={winnerMessage} />
       <ResetBtn gameover={gameOver} onClick={handleResetClick} />
     </div>
