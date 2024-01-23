@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import GameGrid from "./GameGrid.js";
 import ResetBtn from "./ResetBtn.js";
 import GameOver from "./GameOver.js";
@@ -18,43 +18,55 @@ function TicTacToe() {
   const [gameOver, setGameOver] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
 
-  const winningCombos = [
-    { combo: [0, 1, 2], strikeClass: "strike-row-1" },
-    { combo: [3, 4, 5], strikeClass: "strike-row-2" },
-    { combo: [6, 7, 8], strikeClass: "strike-row-3" },
-    { combo: [0, 3, 6], strikeClass: "strike-column-1" },
-    { combo: [1, 4, 7], strikeClass: "strike-column-2" },
-    { combo: [2, 5, 8], strikeClass: "strike-column-3" },
-    { combo: [0, 4, 8], strikeClass: "strike-diagonal-1" },
-    { combo: [6, 4, 2], strikeClass: "strike-diagonal-2" },
-  ];
+  const winningCombos = useMemo(
+    () => [
+      { combo: [0, 1, 2], strikeClass: "strike-row-1" },
+      { combo: [3, 4, 5], strikeClass: "strike-row-2" },
+      { combo: [6, 7, 8], strikeClass: "strike-row-3" },
+      { combo: [0, 3, 6], strikeClass: "strike-column-1" },
+      { combo: [1, 4, 7], strikeClass: "strike-column-2" },
+      { combo: [2, 5, 8], strikeClass: "strike-column-3" },
+      { combo: [0, 4, 8], strikeClass: "strike-diagonal-1" },
+      { combo: [6, 4, 2], strikeClass: "strike-diagonal-2" },
+    ],
+    [] // Empty dependency array as winningCombos is constant
+  );
 
-  function checkWinner(cells, setStrikeClass) {
-    for (const { combo, strikeClass } of winningCombos) {
-      const cellValue1 = cells[combo[0]];
-      const cellValue2 = cells[combo[1]];
-      const cellValue3 = cells[combo[2]];
+  const checkWinner = useMemo(
+    () => () => {
+      for (const { combo, strikeClass } of winningCombos) {
+        const cellValue1 = cells[combo[0]];
+        const cellValue2 = cells[combo[1]];
+        const cellValue3 = cells[combo[2]];
 
-      if (
-        cellValue1 !== null &&
-        cellValue1 === cellValue2 &&
-        cellValue1 === cellValue3
-      ) {
-        setStrikeClass(strikeClass);
-        setWinnerMessage(`Player ${cellValue1} wins!`);
-        setGameOver(true);
-        setIsExploding(true);
+        if (
+          cellValue1 !== null &&
+          cellValue1 === cellValue2 &&
+          cellValue1 === cellValue3
+        ) {
+          setStrikeClass(strikeClass);
+          setWinnerMessage(`Player ${cellValue1} wins!`);
+          setGameOver(true);
+          setIsExploding(true);
 
-        new Audio(winner).play();
+          new Audio(winner).play();
+
+          return;
+        }
       }
-    }
 
-    const allCellsAreFilledIn = cells.every((cell) => cell !== null);
-    if (allCellsAreFilledIn) {
-      setWinnerMessage("It's a draw!");
-      setGameOver(true);
-    }
-  }
+      const allCellsAreFilledIn = cells.every((cell) => cell !== null);
+      if (allCellsAreFilledIn) {
+        setWinnerMessage("It's a draw!");
+        setGameOver(true);
+      }
+    },
+    [cells, setStrikeClass, winningCombos]
+  );
+
+  useEffect(() => {
+    checkWinner();
+  });
 
   function handleCellClick(index) {
     if (gameOver === true) {
@@ -85,10 +97,6 @@ function TicTacToe() {
     setGameOver(false);
     setIsExploding(false);
   }
-
-  useEffect(() => {
-    checkWinner(cells, setStrikeClass);
-  }, [cells]);
 
   return (
     <div className="ticTacToe">
